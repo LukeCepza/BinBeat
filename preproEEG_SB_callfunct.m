@@ -1,13 +1,11 @@
-pathSET = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Theta';
-pathOUT = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Theta_PreprocesadoTrim';
+pathSET = 'C:\Users\lkcep\Documents\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Alpha';
+pathOUT = 'C:\Users\lkcep\Documents\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Alpha_PreprocesadoTrim';
 V_Sets = Get_List(pathSET,'*.gdf');
 
-tic
-parfor i = 1:size(V_Sets,1)
+for i = 1:size(V_Sets,1)
     nameSET = char(V_Sets(i));
     nameSET = nameSET(1:end-4);
-    preproEEG_SB_2(pathSET,nameSET,pathOUT);
+    preproEEG_SB_3decom(pathSET,nameSET,pathOUT);
     disp("Finished: "+i+"/3")
 end
     disp("Finished")
-toc
