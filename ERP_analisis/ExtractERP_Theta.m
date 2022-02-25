@@ -5,7 +5,7 @@
 %EEG_INTP = pop_loadset('D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Beta_PreprocesadoTrim\V1BETA-[2019.10.07-12.55.55]_ica.set');
 
 % Define Paths
-datapathin = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Beta_PreprocesadoTrim';
+datapathin = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Theta_PreprocesadoTrim';
 binlistrout = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Historials\StatERP1Data\Binlister.txt'
 savepath = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Historials\StatERP5Data_Mark'
 %Import wica_clean.set datas
@@ -64,7 +64,7 @@ ERP = pop_averager( EEG , 'Criterion', 'good',...
     % (6) Saves ERP dataset
 ERP.ref = 'A1 A2'
 pop_savemyerp(ERP, 'erpname', erpname, ...
-    'filename', ['Beta_', erpname , '.erp'], ...
+    'filename', ['Theta', erpname , '.erp'], ...
     'filepath', savepath,...
     'Warning', 'on');
 end
