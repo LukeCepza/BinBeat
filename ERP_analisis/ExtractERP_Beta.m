@@ -9,17 +9,17 @@ datapathin = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Beta
 binlistrout = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Historials\StatERP1Data\Binlister.txt'
 savepath = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Historials\StatERP5Data_Mark'
 %Import wica_clean.set datas
-BetaWica_Sets = Get_List(datapathin,'*IClabel_3_clean.set');
+Beta_sets = Get_List(datapathin,'*IClabel_3_clean.set');
 %Design filter
 FiltERP = designfilt('bandpassiir','FilterOrder',4, ...
 'HalfPowerFrequency1',0.1,'HalfPowerFrequency2',60, ...
 'DesignMethod','butter','SampleRate',250); 
 % For Loop
-Vol_size = size(BetaWica_Sets,1);
+Vol_size = size(Beta_sets,1);
 Names = cell(Vol_size,1);
 %%
 for vol = 1:Vol_size
-    nameSET = char(BetaWica_Sets(vol));
+    nameSET = char(Beta_sets(vol));
     EEG = pop_loadset('filename',nameSET,'filepath',datapathin);
     
     %EEG = pop_interp(EEG, EEG_INTP.chanlocs, 'spherical');
@@ -63,8 +63,41 @@ ERP = pop_averager( EEG , 'Criterion', 'good',...
     'DQ_flag', 1, 'ExcludeBoundary', 'on', 'SEM', 'on' );
     % (6) Saves ERP dataset
 ERP.ref = 'A1 A2'
-pop_savemyerp(ERP, 'erpname', erpname, ...
-    'filename', ['Beta_', erpname , '.erp'], ...
-    'filepath', savepath,...
-    'Warning', 'on');
+% pop_savemyerp(ERP, 'erpname', erpname, ...
+%     'filename', ['Beta_', erpname , '.erp'], ...
+%     'filepath', savepath,...
+%     'Warning', 'on');
 end
+%% Import Study Volunteers names
+
+fs = 250;
+FiltERP = designfilt('lowpassiir','FilterOrder',4, ...
+'HalfPowerFrequency',60, ...
+'DesignMethod','butter','SampleRate',fs); 
+Vol_size = size(BetaMark_Sets,1);
+AllERP_IFs = zeros(22,Vol_size,225); AllERP_Fs = zeros(22,Vol_size,225);
+ALLITC_IFs = zeros(22,Vol_size,225); ALLITC_Fs = zeros(22,Vol_size,225);
+AllChanStat_IFs = zeros(22,Vol_size); AllChanStat_Fs = zeros(22,Vol_size);
+Names = cell(Vol_size,1);
+parfor vol = 1:Vol_size
+    nameSET = char(BetaMark_Sets(vol));
+    EEG = pop_loadset('filename',nameSET,'filepath',pathin);
+    EEG.data = filtfilt(FiltERP, double(EEG.data'))';
+    Names(vol) = {nameSET(1:end)};
+    [AllERP_IFs(:,vol,:),ALLITC_IFs(:,vol,:),AllChanStat_IFs(:,vol)] = GetERP_ITC10Hz(EEG,'33285');
+    [AllERP_Fs(:,vol,:),ALLITC_Fs(:,vol,:),AllChanStat_Fs(:,vol)] = GetERP_ITC10Hz(EEG,'33286');
+end
+%% Save all data as struct
+BetaStruct =  struct;
+BetaStruct.Note_ERPITC = '22chanels 25volunteers 225samples';
+BetaStruct.Note_AllChanStat = 'Chanels that were not rejected';
+BetaStruct.channels = {'FP1','FP2','F3','F4','C3','C4',...
+        'P3','P4','O1','O2','F7','F8','T7','T8','P7','P8','Fz','Cz','Pz',...
+        'AFz','CPz','POz'};
+BetaStruct.Names = Names;
+BetaStruct.IFstim.AllERP = AllERP_IFs;
+BetaStruct.IFstim.ALLITCP = ALLITC_IFs;
+BetaStruct.IFstim.AllChanStat = AllChanStat_IFs;
+BetaStruct.Fstim.AllERP = AllERP_Fs;
+BetaStruct.Fstim.ALLITCP = ALLITC_Fs;
+BetaStruct.Fstim.AllChanStat = AllChanStat_Fs;
