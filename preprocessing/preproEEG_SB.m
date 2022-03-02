@@ -31,7 +31,7 @@ function preproEEG_SB_3decom(pathSET,nameSET,pathOUT)
           %EEGbur.setname = [nameSET '_bur'];
           %pop_saveset(EEGbur, 'filename', [nameSET '_bur' '.set'], 'filepath', pathOUT); 
 %(5.1) Interpolate
-          EEG = pop_interp(EEG, originalEEG.chanlocs, 'spherical');
+          EEG = pop_interp(EEG, originalEEG.chanlocs, 'spherical');  
 %(6)Decomposing constant fixed-source noise/artifacts/signals (ICA)
           % (6.1)High-pass filtering @ 1hz
           EEGff=EEG;
@@ -49,27 +49,12 @@ function preproEEG_SB_3decom(pathSET,nameSET,pathOUT)
                 pop_saveset(EEG, 'filename', [nameSET, '_ica','.set'], 'filepath', pathOUT); 
 %(8)Remove ICs artifacts(ICA) 
 % Lo modifique para obtener componentes de descomposición
-
-%     EEG_MARA = pop_loadset('filename', [nameSET, '_ica','.set'], 'filepath', pathOUT);
-%     [~,EEGf_MARA,~] =processMARA( ALLEEG,EEG_MARA,CURRENTSET);
-%     EEGf_MARA = pop_subcomp(EEGf_MARA,find(EEGf_MARA.reject.gcompreject), 0,0); 
-%     EEGf_MARA.setname = [nameSET '_MARA' '_clean'];
-%     pop_saveset(EEGf_MARA, 'filename', [nameSET,'_','MARA','_clean','.set'], 'filepath', pathOUT);
-      
     EEG_IClabel = pop_loadset('filename', [nameSET, '_ica','.set'], 'filepath', pathOUT);
     EEGf_IClabel= iclabel(EEG_IClabel);
     EEGf_IClabel = pop_icflag(EEGf_IClabel, [NaN NaN;0.6 1;0.6 1;0.6 1;0.6 1;0.6 1;0.6 1]);
     EEGf_IClabel = pop_subcomp(EEGf_IClabel,find(EEGf_IClabel.reject.gcompreject), 0,0);
     EEGf_IClabel.setname = [nameSET '_IClabel' '_clean'];
     pop_saveset(EEGf_IClabel, 'filename', [nameSET,'_','IClabel','_clean','.set'], 'filepath', pathOUT);
-    
-%     EEG_WICA = pop_loadset('filename', [nameSET, '_ica','.set'], 'filepath', pathOUT);
-%     channs = 1:EEG_WICA.nbchan;
-%     [wIC,A,~,~] = wICA(EEG_WICA.data(channs,:), [], 1, 0, EEG_WICA.srate);
-%                 artifacts = A*wIC; 
-%                 EEGf_WICA = EEG_WICA;
-%                 EEGf_WICA.data(channs,:) = EEG_WICA.data(channs,:)-artifacts;
-%     EEGf_WICA.setname = [nameSET '_WICA' '_clean'];
-%     pop_saveset(EEGf_WICA, 'filename', [nameSET,'_','WICA','_clean','.set'], 'filepath', pathOUT);
+
 
 end

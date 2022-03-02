@@ -17,7 +17,7 @@ FiltERP = designfilt('bandpassiir','FilterOrder',4, ...
 Vol_size = size(Beta_sets,1);
 Names = cell(Vol_size,1);
 Chanidex = 1:22;
-LTM = ["33285","33286"]; %f , IF
+LTM = ["33285","33286"]; %if , f
 ERPsAll_Beta(Vol_size).name = 1
 for vol = 1:Vol_size
     nameSET = char(Beta_sets(vol));
@@ -57,8 +57,8 @@ for vol = 1:Vol_size
         % (4) Interactively epoch bin-based trials with pre baseline
         % correction
     EEG = pop_epochbin( EEG , [-200.0  700.0],  'pre');
-        % (5) remove epochs with 75 uV peak to peak defections
-    EEG  = pop_artmwppth( EEG , 'Channel',  1:22, 'Flag',  1, 'Threshold',  75, ... 
+        % (5) remove epochs with 100 uV peak to peak defections
+    EEG  = pop_artmwppth( EEG , 'Channel',  1:22, 'Flag',  1, 'Threshold', 100, ... 
         'Twindow',[ -200 596], 'Windowsize',  200, 'Windowstep', 100, 'Review', 'no');
         % (5) Averages bin-epoched EEG dataset(s)
     ERP = pop_averager( EEG , 'Criterion', 'good',...
@@ -91,6 +91,6 @@ for vol = 1:Vol_size
     ERPsAll_Beta(vol).rej_if = sum(ev_if) - sum(ev_filt_if);
     ERPsAll_Beta(vol).erp_f =  squeeze(EEG.data(:,:,ev_filt_f));
     ERPsAll_Beta(vol).erp_if =  squeeze(EEG.data(:,:,ev_filt_if));
-    ERPsAll_Beta(vol).ga_erp_f = ERP.bindata(:,:,1);
-    ERPsAll_Beta(vol).ga_erp_if = ERP.bindata(:,:,2);
+    ERPsAll_Beta(vol).ga_erp_f = ERP.bindata(:,:,2);
+    ERPsAll_Beta(vol).ga_erp_if = ERP.bindata(:,:,1);
 end

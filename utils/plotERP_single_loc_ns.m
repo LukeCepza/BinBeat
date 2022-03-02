@@ -1,9 +1,5 @@
-function plotERP_single_loc(ERPStruct,figColor,LineW,fig_n)
-
-    NumofAvailableChan = squeeze(sum(ERPStruct.AllChanStat,2));
-    GrandSumPerChan    = squeeze((sum(ERPStruct.AllERP(:,:,:),2)));
- 
-    ts = -200:1/250*1000:699;z
+function plotERP_single_loc_ns(Gav,figColor,LineW,fig_n)
+    ts = -200:1/250*1000:699;
     
     f = figure(fig_n); f.Name = 'ERP Plot'; 
     f.Color ='white'; pause(1); f.Position; 
@@ -22,13 +18,13 @@ function plotERP_single_loc(ERPStruct,figColor,LineW,fig_n)
     ch = 0;
     for chpltloc = Labels %Plot per chanel
         ch = ch + 1;
-        Gav=GrandSumPerChan(ch,:)/NumofAvailableChan(ch);
+        %Gav=GrandSumPerChan(ch,:)/NumofAvailableChan(ch);
 
         locplt = str2double(subplotchloc(find(chpltloc == subplotchloc),2));
         subplot(6,5,locplt)
         %Plot ERP
         hold on
-        plot(ts,Gav,'LineWidth',LineW,'Color',cell2mat(figColor))
+        plot(ts,Gav(ch,:),'LineWidth',LineW,'Color',cell2mat(figColor))
         set(gca,'Xtick',[-200 , 0 , 400],'Ytick', [-4 0 6])
         set(gca,'FontUnits','points','FontName','Sans','FontSize',10)
         axis([-200 700 -5 6.2])

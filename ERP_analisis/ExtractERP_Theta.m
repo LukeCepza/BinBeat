@@ -58,7 +58,7 @@ EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on',...
         % correction
     EEG = pop_epochbin( EEG , [-200.0  700.0],  'pre');
         % (5) remove epochs with 75 uV peak to peak defections
-    EEG  = pop_artmwppth( EEG , 'Channel',  1:22, 'Flag',  1, 'Threshold',  75, ... 
+    EEG  = pop_artmwppth( EEG , 'Channel',  1:22, 'Flag',  1, 'Threshold',  100, ... 
         'Twindow',[ -200 596], 'Windowsize',  200, 'Windowstep', 100, 'Review', 'no');
         % (5) Averages bin-epoched EEG dataset(s)
     ERP = pop_averager( EEG , 'Criterion', 'good',...
@@ -91,6 +91,6 @@ EEG  = pop_creabasiceventlist( EEG , 'AlphanumericCleaning', 'on',...
     ERPsAll_Theta(vol).rej_if = sum(ev_if) - sum(ev_filt_if);
     ERPsAll_Theta(vol).erp_f =  squeeze(EEG.data(:,:,ev_filt_f));
     ERPsAll_Theta(vol).erp_if =  squeeze(EEG.data(:,:,ev_filt_if));
-    ERPsAll_Theta(vol).ga_erp_f = ERP.bindata(:,:,1);
-    ERPsAll_Theta(vol).ga_erp_if = ERP.bindata(:,:,2);
+    ERPsAll_Theta(vol).ga_erp_if = ERP.bindata(:,:,1);
+    ERPsAll_Theta(vol).ga_erp_f = ERP.bindata(:,:,2);    
 end
