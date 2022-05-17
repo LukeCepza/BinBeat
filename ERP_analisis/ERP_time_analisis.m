@@ -9,7 +9,7 @@ summary.P200 = ERP_amp_lat(summary,150,250, "P");
 summary.N100 = ERP_amp_lat(summary,80,120, "N");
 summary.N200 = ERP_amp_lat(summary,180,220, "N");
 
-figure(4)
+figure(9)
 subplot(2,1,1)
 plot(times,summary.erp_beta_f', "r", "linewidth", 0.5)
 hold on
@@ -27,15 +27,17 @@ scatter(summary.P300.lat_theta_if, summary.P300.amp_theta_if,">k")
 hold off
 ylim([-5,6])
 %%
+%Compute Grand Average store it at summary struct
 function summary = get_GA_ns_beta(ERP_ns,summary)
      summary.erp_beta_f = mean(reshape([ERP_ns.ga_erp_f],22,225,[]),3);
      summary.erp_beta_if = mean(reshape([ERP_ns.ga_erp_if],22,225,[]),3);
 end
+%Compute Grand Average store it at summary struct
 function summary = get_GA_ns_theta(ERP_ns,summary)
      summary.erp_theta_f = mean(reshape([ERP_ns.ga_erp_f],22,225,[]),3);
      summary.erp_theta_if = mean(reshape([ERP_ns.ga_erp_if],22,225,[]),3);
 end
-
+%Obtain main components 
 function comp = ERP_amp_lat(summary,llim,ulim,side)
     comp = struct
     t_full = summary.times;

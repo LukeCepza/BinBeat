@@ -1,12 +1,15 @@
-pathSET = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Theta';
-pathOUT = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Theta_PreprocesadoTrim';
+
+addpath('D:\Kevin_Cepeda\shared_git\neuro\BinBeat\utils')
+
+pathSET = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Beta';
+pathOUT = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Beta_PreprocesadoTrim';
 V_Sets = Get_List(pathSET,'*.gdf');
 
 tic
 parfor i = 1:size(V_Sets,1)
     nameSET = char(V_Sets(i));
     nameSET = nameSET(1:end-4);
-    preproEEG_SB_3(pathSET,nameSET,pathOUT);
+    preproEEG_SB_mark(pathSET,nameSET,pathOUT);
     disp("Finished: "+i+"/3")
 end
     disp("Finished")

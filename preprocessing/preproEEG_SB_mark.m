@@ -1,6 +1,8 @@
 function preproEEG_SB_3(pathSET,nameSET,pathOUT)
 %%By Luis Kevin Cepeda Zapata 
-[ALLEEG,~,CURRENTSET]=eeglab;
+if exist('ALLCOM','var') == 0
+    [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
+end
 %(1.1) Load .gdf data
         EEG = pop_biosig(strcat(pathSET,'\',nameSET,'.gdf'));
 %(1.2) Edit channhel locations
@@ -23,7 +25,6 @@ function preproEEG_SB_3(pathSET,nameSET,pathOUT)
             'Highpass',[0.25 0.5] ,'BurstCriterion',20,...
             'WindowCriterion',0.25,'BurstRejection','on',...
             'Distance','Euclidian','WindowCriterionTolerances',[-Inf 7]);
-        clean_drifts()
 %(4)Remove flatlined channels, non correlated channels, non stationary
 %artifacts (ASR), and contaminated windows.
                 %This works well with default settings in all
@@ -64,7 +65,7 @@ function preproEEG_SB_3(pathSET,nameSET,pathOUT)
         goodIcIdx = intersect(brainIdx, goodRvIdx);
         EEG = pop_subcomp(EEG, goodIcIdx, 0, 1);
 %(10) Save dataset
-        EEG.setname = [nameSET(1:end-22),'_clean3'];
-        pop_saveset(EEG, 'filename', [nameSET(1:end-22),'_','IClabel_3','_clean','.set'], 'filepath', pathOUT);
+        EEG.setname = [nameSET(1:end-22),'_clean_makoto'];
+        pop_saveset(EEG, 'filename', [nameSET(1:end-22),'_','_makotos','_clean','.set'], 'filepath', pathOUT);
 
 end

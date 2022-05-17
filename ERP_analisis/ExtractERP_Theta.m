@@ -3,12 +3,13 @@
 if exist('ALLCOM','var') == 0
     [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 end
+addpath('D:\Kevin_Cepeda\shared_git\neuro\BinBeat\utils')
 % Define Paths
 datapathin = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Theta_PreprocesadoTrim';
 binlistrout = 'D:\Kevin_Cepeda\Matlab\NewMatLabData\Neuroengineering\SB_2021\Historials\StatERP1Data\Binlister.txt'
 savepath = 'D:\Kevin_Cepeda\shared_git\neuro\erp_data\NS_theta'
 %Import wica_clean.set datas
-Theta_Sets = Get_List(datapathin,'*IClabel_3_clean.set');
+Theta_Sets = Get_List(datapathin,'*makotos_clean.set');
 %Design filter
 FiltERP = designfilt('bandpassiir','FilterOrder',6, ...
 'HalfPowerFrequency1',0.3,'HalfPowerFrequency2',32, ...
@@ -85,22 +86,25 @@ for vol = 1:Vol_size
     filt_bina = bina - int16(logical(flags(bina_all > 0))+logical(valCount))*3 ;
     ev_filt_if = (filt_bina == 1);
     ev_filt_f = (filt_bina == 2);
-
+    
         % (6) Saves ERP dataset
-    if sum(ev_filt_if) >= 30
 %         pop_savemyerp(ERP, 'erpname', erpname, ...
 %         'filename', ['Theta', erpname , '.erp'], ...
 %         'filepath', savepath,...
 %         'Warning', 'on');
                 
         % (7) Save structures
-        ERPsAll_Theta(vol).f = sum(ev_filt_f);
-        ERPsAll_Theta(vol).if = sum(ev_filt_if);
-        ERPsAll_Theta(vol).rej_f = sum(ev_f) - sum(ev_filt_f);
-        ERPsAll_Theta(vol).rej_if = sum(ev_if) - sum(ev_filt_if);
-        ERPsAll_Theta(vol).erp_f =  squeeze(EEG.data(:,:,ev_filt_f));
-        ERPsAll_Theta(vol).erp_if =  squeeze(EEG.data(:,:,ev_filt_if));
-        ERPsAll_Theta(vol).ga_erp_if = ERP.bindata(:,:,1);
-        ERPsAll_Theta(vol).ga_erp_f = ERP.bindata(:,:,2);    
+    ERPsAll_Theta(vol).f = sum(ev_filt_f);
+    ERPsAll_Theta(vol).if = sum(ev_filt_if);
+    ERPsAll_Theta(vol).rej_f = sum(ev_f) - sum(ev_filt_f);
+    ERPsAll_Theta(vol).rej_if = sum(ev_if) - sum(ev_filt_if);
+    ERPsAll_Theta(vol).erp_f =  squeeze(EEG.data(:,:,ev_filt_f));
+    ERPsAll_Theta(vol).erp_if =  squeeze(EEG.data(:,:,ev_filt_if));
+    ERPsAll_Theta(vol).ga_erp_if = ERP.bindata(:,:,1);
+    ERPsAll_Theta(vol).ga_erp_f = ERP.bindata(:,:,2);    
+
+
+    if sum(ev_filt_if) <= 40    
+        ERPsAll_Theta(vol).name = [nameSET(1:3),'_drop'];
     end
 end

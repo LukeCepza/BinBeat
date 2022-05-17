@@ -1,5 +1,7 @@
-function preproEEG_SB_3decom(pathSET,nameSET,pathOUT)
-%%By Alma Socorro Torres Torres modificado por Luis Kevin Cepeda
+function preproEEG_SB(pathSET,nameSET,pathOUT)
+%%By Luis Kevin Cepeda Zapata
+% 11/03/2022 Modified, removed cleanline function as we are only interested 
+%   on freq range of 0.1 - 32 Hz.
 [ALLEEG,~,CURRENTSET]=eeglab;
 %(1.1) Cargar datos .gdf
           %EEG = pop_loadset('filename', nameSET, 'filepath', pathSET);
@@ -16,14 +18,14 @@ function preproEEG_SB_3decom(pathSET,nameSET,pathOUT)
         EEG.data = rmbase(EEG.data);
 % (2.1) Quitar componentes baja frecuencia 
         FiltEEG = designfilt('bandpassiir','FilterOrder',4, ...
-        'HalfPowerFrequency1',0.1,'HalfPowerFrequency2',100, ...
+        'HalfPowerFrequency1',0.1,'HalfPowerFrequency2',60, ...
         'DesignMethod','butter','SampleRate',EEG.srate); 
-        EEG.data = single(filtfilt(FiltEEG, double(EEG.data')))';
-%(3)Line noise
-        EEG = pop_cleanline(EEG, 'bandwidth',2,'chanlist', 1:EEG.nbchan,...
-        'computepower',1,'linefreqs',60,'normSpectrum',0,'p',0.05,...
-        'pad',2,'plotfigures',0,'scanforlines',1,'sigtype',...
-        'Channels','tau',100,'verb',1,'winsize',4,'winstep',1); 
+        EEG.data = double(filtfilt(FiltEEG, double(EEG.data')))';
+% %(3)Line noise
+%         EEG = pop_cleanline(EEG, 'bandwidth',2,'chanlist', 1:EEG.nbchan,...
+%         'computepower',1,'linefreqs',60,'normSpectrum',0,'p',0.05,...
+%         'pad',2,'plotfigures',0,'scanforlines',1,'sigtype',...    
+%         'Channels','tau',100,'verb',1,'winsize',4,'winstep',1); 
           %pop_saveset(EEG, 'filename', [nameSET '_raw' '.set'], 'filepath', pathOUT); 
 %(5)Remove occasional large-amplitude noise/artifacts
           [EEG,~,EEGbur] = clean_artifacts(EEG,'ChannelCriterion',0.65);
